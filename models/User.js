@@ -18,11 +18,6 @@ const userSchema = mongoose.Schema({
         type: String,
         minlength: 5
     },
-    //이름
-    lastname: {
-        type: String,
-        maxlength: 50
-    },
     //일반 유저와 관리자 판가름 
     role: {
         //1이면 관리자, 0이면 일반 유저 이런식으로 가능
@@ -37,7 +32,7 @@ const userSchema = mongoose.Schema({
     },
     //토큰 유효기간
     tokenExp: { 
-        type: Numer
+        type: Number
     }
 })
 
