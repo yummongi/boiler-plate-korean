@@ -28,7 +28,7 @@ app.listen(port, () => {
   console.log(`서버가 실행되었습니다. 포트: ${port}`)
 })
 
-//회원가입 기능
+//회원가입 기능 라우터
 app.post('/register', (req, res) => {
 
   //회원 가입 할때 필요한 정보들을 client에서 가져오면
@@ -43,5 +43,30 @@ app.post('/register', (req, res) => {
       success: true
     })
   })
+})
 
+//로그인 기능 라우터
+app.post('/login', (req, res) => {
+  //요청된 이메일을 데이터베이스에서 있는지 찾는다.
+  User.findOne({ email: req.body.email }, (err, user) => {
+    if(!user){
+      //user에 없으면 json 형식으로 전달
+      return res.json({
+        loginSuccess: false,
+        message: "제공된 이메일에 해당하는 유저가 없습니다."
+      })
+    }
+  })
+  //요청한 이메일이 데이터베이스에서 있다면 비밀번호가 맞는 비밀번호인지 확인한다.
+  //User.js의 userSchema.methods.comparePassword 부분부터 작동한 후 아래 메소드 작동
+  user.comparePassword(req.body.password, (err, isMatch) => {
+    if(!isMatch)
+      return res.json({ loginSuccess: false, message: "비밀번호가 틀렸습니다."})
+
+    //비밀번호까지 맞다면 토큰 생성하기.
+    user.generateToken((err, user) => {
+
+    })
+    
+  })
 })
