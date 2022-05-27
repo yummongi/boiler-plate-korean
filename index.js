@@ -88,28 +88,29 @@ app.post('/api/users/login', (req, res) => {
   });
 });
 
-//auth 라우터
-app.get('/api/users/auth', auth, (req,res) => {
-  //여기까지 미들웨어를 통과해 왔다는 얘기는 Authenication이 True 라는 의미
+// role 1 어드민    role 2 특정 부서 어드민 
+// role 0 -> 일반유저   role 0이 아니면  관리자 
+app.get('/api/users/auth', auth, (req, res) => {
+  //여기 까지 미들웨어를 통과해 왔다는 얘기는  Authentication 이 True 라는 말.
   res.status(200).json({
-    //id 
     _id: req.user._id,
-    //0이 아니면 어드민 or 0이면 일반유저
-    isAdmin: req.user.role == 0 ? false : true,
+    isAdmin: req.user.role === 0 ? false : true,
+    isAuth: true,
     email: req.user.email,
     name: req.user.name,
+    lastname: req.user.lastname,
     role: req.user.role,
     image: req.user.image
-  });
-});
+  })
+})
 
 //로그아웃 라우터
 app.get('/api/users/logout', auth, (req, res) => {
-  //유저를 찾아서 Update
-  User.findOneAndUpdate({_id: req.user._id},
-    {token: ""},
-    (err, user) =>{
-      if(err) return res.json({success: false, err});
+  // console.log('req.user', req.user)
+  User.findOneAndUpdate({ _id: req.user._id },
+    { token: "" }
+    , (err, user) => {
+      if (err) return res.json({ success: false, err });
       return res.status(200).send({
         success: true
       })
