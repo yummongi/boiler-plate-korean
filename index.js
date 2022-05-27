@@ -2,17 +2,17 @@ const express = require('express');
 const app = express();
 
 const bodyParser = require('body-parser');
-const cookieParset = require('cookie-parser');
-const { auth } = require("./middleware/auth");
-const { User } = require("./models/User");
+const cookieParser = require('cookie-parser');
+const { auth } = require("./server/middleware/auth");
+const { User } = require("./server/models/User");
 
-const config = require('./config/key');
+const config = require('./server/config/key');
 
 //클라이언트에서 오는 정보를 서버에서 분석해서 가져올 수 있도록 함
 //application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 //cookie-parser 사용
-app.use(cookieParset());
+app.use(cookieParser());
 //aplication/json
 app.use(bodyParser.json());
 
@@ -28,6 +28,9 @@ app.get('/', (req, res) => {
   res.send('Hello World!안녕하세요~~')
 });
 
+app.get('/api/hello', (req, res) => {
+  res.send("안녕하세요 ~")
+})
 
 //회원가입 기능 라우터
 app.post('/api/users/register', (req, res) => {
@@ -112,6 +115,8 @@ app.get('/api/users/logout', auth, (req, res) => {
       })
     })
 })
+
+
 const port = 5000;
 app.listen(port, () =>
   console.log(`서버가 실행되었습니다. 포트: ${port}`))
